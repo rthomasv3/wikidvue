@@ -15,6 +15,7 @@ import Dialog from 'primevue/dialog'
 import Divider from 'primevue/divider'
 import SpeedDial from 'primevue/speeddial'
 import Toast from 'primevue/toast'
+import Dropdown from 'primevue/dropdown'
 import 'primevue/resources/primevue.min.css'
 import 'primeflex/primeflex.css'
 import 'primeicons/primeicons.css'
@@ -31,6 +32,7 @@ app.component('Dialog', Dialog)
 app.component('Divider', Divider)
 app.component('SpeedDial', SpeedDial)
 app.component('Toast', Toast)
+app.component('Dropdown', Dropdown)
 
 app.use(router)
 app.use(store)

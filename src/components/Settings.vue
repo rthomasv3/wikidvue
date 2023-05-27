@@ -1,22 +1,33 @@
 <template>
   <div class="mt-2">
-    <div class="grid">
-      <div class="col-10">
+    <div class="grid align-items-center">
+      <div class="col-fixed">
         <p>Theme</p>
       </div>
-      <div class="col-2">
-        <Button class="mt-1" :icon="themeIcon" @click="toggleTheme" text />
+      <div class="col flex justify-content-end">
+        <Button :icon="themeIcon" @click="toggleTheme" text />
       </div>
     </div>
 
     <Divider class="mt-0 mb-2" />
 
-    <div class="grid">
-      <div class="col-10">
-        <p>Theme again to test divider and layout</p>
+    <div class="grid align-items-center">
+      <div class="col-fixed">
+        <p>Markdown Theme</p>
       </div>
-      <div class="col-2">
-        <Button class="mt-1" :icon="themeIcon" @click="toggleTheme" text />
+      <div class="col flex justify-content-end">
+        <Dropdown v-model="selectedMarkdownTheme" :options="markdownThemes" placeholder="Select a theme..." />
+      </div>
+    </div>
+
+    <Divider class="mt-0 mb-2" />
+
+    <div class="grid align-items-center">
+      <div class="col-fixed">
+        <p>Code Theme</p>
+      </div>
+      <div class="col flex justify-content-end">
+        <Dropdown v-model="selectedCodeTheme" :options="codeThemes" placeholder="Select a theme..." />
       </div>
     </div>
   </div>
@@ -29,6 +40,28 @@ export default {
   computed: {
     themeIcon() {
       return this.$store.state.currentTheme === this.$store.state.darkTheme ? 'pi pi-sun' : 'pi pi-moon'
+    },
+    markdownThemes() {
+      return this.$store.state.markdownThemes
+    },
+    selectedMarkdownTheme: {
+      get() {
+        return this.$store.state.selectedMarkdownTheme
+      },
+      set(selectedTheme) {
+        this.$store.commit('setMarkdownTheme', selectedTheme)
+      }
+    },
+    codeThemes() {
+      return this.$store.state.codeThemes
+    },
+    selectedCodeTheme: {
+      get() {
+        return this.$store.state.selectedCodeTheme
+      },
+      set(selectedTheme) {
+        this.$store.commit('setCodeTheme', selectedTheme)
+      }
     }
   },
   methods: {

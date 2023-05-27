@@ -4,12 +4,39 @@ export default createStore({
   state () {
     return {
       currentTheme: 'arya-blue',
-      darkTheme: 'arya-blue'
+      darkTheme: 'arya-blue',
+      lightTheme: 'saga-blue',
+      markdownThemes: [
+        'cyanosis',
+        'default',
+        'github',
+        'mk-cute', 
+        'smart-blue', 
+        'vuepress', 
+      ],
+      selectedMarkdownTheme: 'github',
+      codeThemes: [
+        'a11y',
+        'atom',
+        'github',
+        'gradient',
+        'kimbie',
+        'paraiso',
+        'qtcreator',
+        'stackoverflow',
+      ],
+      selectedCodeTheme: 'github'
     }
   },
   mutations: {
     toggleTheme (state) {
-      state.currentTheme = state.currentTheme == 'arya-blue' ? 'saga-blue' : 'arya-blue'
+      state.currentTheme = state.currentTheme == state.darkTheme ? state.lightTheme : state.darkTheme
+    },
+    setMarkdownTheme(state, selectedTheme) {
+      state.selectedMarkdownTheme = selectedTheme
+    },
+    setCodeTheme(state, selectedTheme) {
+      state.selectedCodeTheme = selectedTheme
     }
   },
   getters: {

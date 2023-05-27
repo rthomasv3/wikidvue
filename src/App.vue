@@ -57,8 +57,17 @@ body {
   max-height: 100vh;
 }
 
+.p-dialog {
+  background-color: var(--surface-section) !important;
+}
+
 .p-dialog-header {
   padding: 1rem 1rem 0rem 1rem !important;
+  background-color: var(--surface-section) !important;
+}
+
+.p-dialog-content {
+  background-color: var(--surface-section) !important;
 }
 
 .p-button:enabled {

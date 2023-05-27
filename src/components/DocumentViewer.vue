@@ -5,8 +5,8 @@
     <SpeedDial class="mr-5 mb-4" :model="items" :radius="120" type="quarter-circle" buttonClass="small-dial"
                direction="up-left" :style="{ right: 0, bottom: 0 }" :transitionDelay="90" />
 
-    <!-- <div v-html="documentHtml"></div> -->
-    <MdPreview :modelValue="documentData" language="en-US" :theme="theme" previewTheme="github" codeTheme="github" />
+    <MdPreview :modelValue="documentData" language="en-US" :theme="theme" 
+               :previewTheme="markdownTheme" :codeTheme="codeTheme" />
   </div>
 </template>
 
@@ -25,6 +25,12 @@ export default {
   computed: {
     theme() {
       return this.$store.getters.isDarkTheme ? 'dark' : 'light'
+    },
+    markdownTheme() {
+      return this.$store.state.selectedMarkdownTheme
+    },
+    codeTheme() {
+      return this.$store.state.selectedCodeTheme
     }
   },
   data: function () {
@@ -47,7 +53,7 @@ export default {
           command: () => { this.$toast.add({ severity: 'info', summary: 'Info', detail: 'Download Clicked', life: 3000 }) } 
         },
         { 
-          abel: 'Delete', 
+          label: 'Delete', 
           icon: 'pi pi-trash',
           command: () => { this.$toast.add({ severity: 'info', summary: 'Info', detail: 'Delete Clicked', life: 3000 }) } 
         }

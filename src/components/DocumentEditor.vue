@@ -1,14 +1,12 @@
 <template>
   <div class="flex flex-column w-full">
     <MdEditor ref="editor" class="h-full" v-model="text" language="en-US" :theme="theme" 
-              previewTheme="github" codeTheme="github" :toolbars="toolbars" :footers="footers"
-              :preview="showPreview" autoFocus @onChange="updateWordCount">
+              :previewTheme="markdownTheme" :codeTheme="codeTheme" :toolbars="toolbars" 
+              :footers="footers" :preview="showPreview" autoFocus @onChange="updateWordCount">
       <template #defFooters>
         <p class="text-color-secondary text-xs m-0 pl-2 pt-2">Word Count: {{ wordCount }}</p>
       </template>
     </MdEditor>
-
-    <!-- <p class="text-color-secondary text-xs m-0 pl-2 pt-1 pb-1">Word Count: {{ wordCount }}</p> -->
   </div>
 
   <SpeedDial class="mr-5 mb-4" :model="items" :radius="120" type="quarter-circle" buttonClass="small-dial" 
@@ -32,6 +30,12 @@ export default {
   computed: {
     theme() {
       return this.$store.getters.isDarkTheme ? 'dark' : 'light'
+    },
+    markdownTheme() {
+      return this.$store.state.selectedMarkdownTheme
+    },
+    codeTheme() {
+      return this.$store.state.selectedCodeTheme
     }
   },
   mounted() {
