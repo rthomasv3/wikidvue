@@ -12,7 +12,7 @@
       </template>
     </Toolbar>
 
-    <Dialog v-model:visible="settingsVisible" modal header="Settings" :style="{ minWidth: '50vw' }" :dismissableMask="true">
+    <Dialog v-model:visible="settingsVisible" modal header="Settings" :style="{ minWidth: '35vw' }" :dismissableMask="true">
       <Settings />
     </Dialog>
   </div>
