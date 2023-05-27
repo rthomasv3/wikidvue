@@ -16,7 +16,7 @@ export default {
     }
   },
   mounted() {
-    this.documentData[1].data = fullDocument
+    this.documentData[0].data = fullDocument
   },
   methods: {
     onNodeSelected(node) {
