@@ -2,25 +2,35 @@
   <div>
     <Toast />
 
-    <SpeedDial class="mr-5 mb-4" :model="items" :radius="120" type="quarter-circle" buttonClass="small-dial"
+    <SpeedDial v-if="selectedNode" class="mr-5 mb-4" :model="items" :radius="120" type="quarter-circle" buttonClass="small-dial"
                direction="up-left" :style="{ right: 0, bottom: 0 }" :transitionDelay="90" />
 
     <MdPreview :key="key" :modelValue="documentData" language="en-US" :theme="theme" :previewTheme="markdownTheme" 
                :codeTheme="codeTheme" :showCodeRowNumber="showCodeLineNumbers" :mdHeadingId="mdHeadingId" />
+
+    <Dialog v-model:visible="moveVisible" modal header="Move Document" :style="{ minWidth: '35vw' }" :dismissableMask="true">
+      <Move :selectedNode="selectedNode" @onClosed="moveClosed" />
+    </Dialog>
+
+    <ConfirmDialog></ConfirmDialog>
   </div>
 </template>
 
 <script>
 import { MdPreview } from 'md-editor-v3';
 import { getHeaderId } from "../services/headerService";
+import { exportDocument} from '../services/exportService';
+import Move from '@/components/Move.vue'
 
 export default {
   name: 'DocumentViewer',
   props: {
-    documentData: null
+    documentData: null,
+    selectedNode: null
   },
   components: {
-    MdPreview
+    MdPreview,
+    Move
   },
   computed: {
     theme() {
@@ -39,7 +49,6 @@ export default {
   data: function () {
     return {
       key: 0,
-      documentHtml: null,
       items: [ 
         { 
           label: 'Edit', 
@@ -49,20 +58,36 @@ export default {
         { 
           label: 'Move', 
           icon: 'pi pi-file-export',
-          command: () => { this.$toast.add({ severity: 'info', summary: 'Info', detail: 'Move Clicked', life: 3000 }) } 
+          command: () => { this.moveVisible = true } 
         },
         { 
           label: 'Download', 
           icon: 'pi pi-download',
-          command: () => { this.$toast.add({ severity: 'info', summary: 'Info', detail: 'Download Clicked', life: 3000 }) } 
+          command: () => { exportDocument(this.selectedNode.data, this.selectedNode.label + '.md') } 
         },
         { 
           label: 'Delete', 
           icon: 'pi pi-trash',
-          command: () => { this.$toast.add({ severity: 'info', summary: 'Info', detail: 'Delete Clicked', life: 3000 }) } 
+          command: () => {
+            if (this.selectedNode !== null) {
+              this.$confirm.require({
+                message: 'Are you sure you want to delete ' + this.selectedNode.label + '?',
+                header: 'Delete Document',
+                icon: 'pi pi-question-circle',
+                acceptClass: 'pr-4 p-button-danger',
+                rejectClass: 'pr-4 p-button-text',
+                accept: () => {
+                  this.$store.commit('deleteWikiDocument', this.selectedNode.key)
+                  this.$emit('document-deleted')
+                  this.$toast.add({ severity: 'success', summary: 'Success', detail: 'Deleted ' + this.selectedNode.label, life: 3000 })
+                }
+              });
+            }
+          }
         }
       ],
-      unsubscribe: null
+      unsubscribe: null,
+      moveVisible: false
     }
   },
   mounted() {
@@ -79,6 +104,9 @@ export default {
   methods: {
     mdHeadingId(text, level, index) {
       return getHeaderId(text, level, index)
+    },
+    moveClosed() {
+      this.moveVisible = false
     }
   }
 }

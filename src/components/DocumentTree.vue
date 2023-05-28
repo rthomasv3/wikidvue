@@ -10,13 +10,14 @@ const fullDocument = require('../assets/data/full-document.txt');
 
 export default {
   name: 'DocumentTree',
-  data: function () {
-    return {
-      documentData: documents
+  computed: {
+    documentData() {
+      return this.$store.state.wikiDocuments
     }
   },
   mounted() {
-    this.documentData[0].data = fullDocument
+    documents[0].data = fullDocument
+    this.$store.commit('setWikiDocuments', documents)
   },
   methods: {
     onNodeSelected(node) {

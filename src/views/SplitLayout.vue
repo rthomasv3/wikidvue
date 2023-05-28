@@ -23,7 +23,8 @@
             <div class="flex flex-1 border-round-sm text-left p-1">
               <DocumentEditor v-if="editorSelected" :documentData="documentData" @saveSelected="onSaveSelected" @cancelSelected="onCancelSelected" />
               <div v-else class="scrollable pl-3">
-                <DocumentViewer :documentData="documentData" @editorSelected="onEditorSelected" />
+                <DocumentViewer :documentData="documentData" :selectedNode="selectedNode" 
+                                @editorSelected="onEditorSelected" @documentDeleted="onDocumentDeleted" />
               </div>
             </div>
           </div>
@@ -36,7 +37,7 @@
         <i class="pi pi-chevron-left"></i>
       </template>
 
-      <DocumentViewer :documentData="documentData" />
+      <DocumentViewer :documentData="documentData" :selectedNode="selectedNode" />
     </Dialog>
   </div>
 </template>
@@ -89,6 +90,9 @@ export default {
     },
     onCancelSelected() {
       this.editorSelected = false
+    },
+    onDocumentDeleted() {
+      this.selectedNode = null
     }
   }
 }

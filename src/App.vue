@@ -70,6 +70,10 @@ body {
   background-color: var(--surface-section) !important;
 }
 
+.p-dialog-footer {
+  padding-top: 1.1rem !important;
+}
+
 .p-button:enabled {
   box-shadow: none !important;
 }
