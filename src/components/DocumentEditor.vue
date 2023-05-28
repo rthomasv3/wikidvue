@@ -1,8 +1,10 @@
 <template>
   <div class="flex flex-column w-full">
-    <MdEditor ref="editor" class="h-full" v-model="text" language="en-US" :theme="theme" 
+    <MdEditor :key="key" ref="editor" class="h-full" v-model="text" language="en-US" :theme="theme" 
               :previewTheme="markdownTheme" :codeTheme="codeTheme" :toolbars="toolbars" 
-              :footers="footers" :preview="showPreview" autoFocus @onChange="updateWordCount">
+              :footers="footers" :preview="showPreview" autoFocus @onChange="updateWordCount"
+              :showCodeRowNumber="showCodeLineNumbers" :tabWidth="tabWidth" autoDetectCode
+              :mdHeadingId="mdHeadingId">
       <template #defFooters>
         <p class="text-color-secondary text-xs m-0 pl-2 pt-2">Word Count: {{ wordCount }}</p>
       </template>
@@ -17,6 +19,7 @@
 import { MdEditor } from 'md-editor-v3';
 import removeMd from 'remove-markdown';
 import 'md-editor-v3/lib/style.css';
+import { getHeaderId } from "../services/headerService";
 
 export default {
   name: 'DocumentEditor',
@@ -36,13 +39,27 @@ export default {
     },
     codeTheme() {
       return this.$store.state.selectedCodeTheme
+    },
+    showCodeLineNumbers() {
+      return this.$store.state.showCodeLineNumbers
+    },
+    tabWidth() {
+      return this.$store.state.tabWidth
     }
   },
   mounted() {
+    this.unsubscribe = this.$store.subscribe((mutation, state) => {
+      this.key++
+    })
+
     this.updateWordCount()
+  },
+  unmounted() {
+    this.unsubscribe()
   },
   data() {
     return {
+      key: 0,
       text: this.documentData,
       pageFullScreen: false,
       fullScreen: false,
@@ -72,6 +89,7 @@ export default {
           command: () => { this.$emit('cancel-selected') }
         }
       ],
+      unsubscribe: null
     }
   },
   methods: {
@@ -108,6 +126,9 @@ export default {
 
       this.wordCount = strippedText !== null ? strippedText.length : 0
     },
+    mdHeadingId(text, level, index) {
+      return getHeaderId(text, level, index)
+    }
   }
 }
 </script>

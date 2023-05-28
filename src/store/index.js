@@ -25,7 +25,9 @@ export default createStore({
         'qtcreator',
         'stackoverflow',
       ],
-      selectedCodeTheme: 'github'
+      selectedCodeTheme: 'github',
+      showCodeLineNumbers: false,
+      tabWidth: 2
     }
   },
   mutations: {
@@ -37,6 +39,12 @@ export default createStore({
     },
     setCodeTheme(state, selectedTheme) {
       state.selectedCodeTheme = selectedTheme
+    },
+    setShowCodeLineNumbers(state, showCodeLineNumbers) {
+      state.showCodeLineNumbers = showCodeLineNumbers
+    },
+    setTabWidth(state, tabWidth) {
+      state.tabWidth = tabWidth
     }
   },
   getters: {

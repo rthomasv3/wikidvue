@@ -5,14 +5,14 @@
     <SpeedDial class="mr-5 mb-4" :model="items" :radius="120" type="quarter-circle" buttonClass="small-dial"
                direction="up-left" :style="{ right: 0, bottom: 0 }" :transitionDelay="90" />
 
-    <MdPreview :modelValue="documentData" language="en-US" :theme="theme" 
-               :previewTheme="markdownTheme" :codeTheme="codeTheme" />
+    <MdPreview :key="key" :modelValue="documentData" language="en-US" :theme="theme" :previewTheme="markdownTheme" 
+               :codeTheme="codeTheme" :showCodeRowNumber="showCodeLineNumbers" :mdHeadingId="mdHeadingId" />
   </div>
 </template>
 
 <script>
 import { MdPreview } from 'md-editor-v3';
-import { marked } from "marked";
+import { getHeaderId } from "../services/headerService";
 
 export default {
   name: 'DocumentViewer',
@@ -31,10 +31,14 @@ export default {
     },
     codeTheme() {
       return this.$store.state.selectedCodeTheme
+    },
+    showCodeLineNumbers() {
+      return this.$store.state.showCodeLineNumbers
     }
   },
   data: function () {
     return {
+      key: 0,
       documentHtml: null,
       items: [ 
         { 
@@ -57,20 +61,21 @@ export default {
           icon: 'pi pi-trash',
           command: () => { this.$toast.add({ severity: 'info', summary: 'Info', detail: 'Delete Clicked', life: 3000 }) } 
         }
-      ]
+      ],
+      unsubscribe: null
     }
   },
   mounted() {
-    this.renderDocument()
+    this.unsubscribe = this.$store.subscribe((mutation, state) => {
+      this.key++
+    })
   },
-  updated() {
-    this.renderDocument()
+  unmounted() {
+    this.unsubscribe()
   },
   methods: {
-    renderDocument() {
-      if (this.documentData !== null && this.documentData !== undefined) {
-        this.documentHtml = marked(this.documentData, { mangle: false, headerIds: false })
-      }
+    mdHeadingId(text, level, index) {
+      return getHeaderId(text, level, index)
     }
   }
 }

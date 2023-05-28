@@ -30,6 +30,28 @@
         <Dropdown v-model="selectedCodeTheme" :options="codeThemes" placeholder="Select a theme..." />
       </div>
     </div>
+
+    <Divider class="mt-0 mb-2" />
+
+    <div class="grid align-items-center">
+      <div class="col-fixed">
+        <p>Code Line Numbers</p>
+      </div>
+      <div class="col flex justify-content-end">
+        <InputSwitch v-model="showCodeLineNumbers" />
+      </div>
+    </div>
+
+    <Divider class="mt-0 mb-2" />
+
+    <div class="grid align-items-center">
+      <div class="col-fixed">
+        <p>Tab Width</p>
+      </div>
+      <div class="col flex justify-content-end">
+        <InputNumber v-model="tabWidth" :min="0" :max="32" />
+      </div>
+    </div>
   </div>
 </template>
 
@@ -61,6 +83,22 @@ export default {
       },
       set(selectedTheme) {
         this.$store.commit('setCodeTheme', selectedTheme)
+      }
+    },
+    showCodeLineNumbers: {
+      get() {
+        return this.$store.state.showCodeLineNumbers
+      },
+      set(showCodeLineNumbers) {
+        this.$store.commit('setShowCodeLineNumbers', showCodeLineNumbers)
+      }
+    },
+    tabWidth: {
+      get() {
+        return this.$store.state.tabWidth
+      },
+      set(tabWidth) {
+        this.$store.commit('setTabWidth', tabWidth)
       }
     }
   },
