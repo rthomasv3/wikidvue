@@ -49,7 +49,10 @@ export default {
   },
   mounted() {
     this.unsubscribe = this.$store.subscribe((mutation, state) => {
-      this.key++
+      if (mutation.type === 'setShowCodeLineNumbers' ||
+          mutation.type === 'setTabWidth') {
+        this.key++
+      }
     })
 
     this.updateWordCount()
