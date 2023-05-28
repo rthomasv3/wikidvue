@@ -72,7 +72,7 @@ export default createStore({
         var node = moveRequest.node
         var parentNode = moveRequest.parentNode
 
-        if (node !== null && parentNode !== null) {
+        if (node !== null && parentNode !== null && node.key !== parentNode.key) {
           if (parentNode.children === null || parentNode.children === undefined) {
             parentNode.children = [ ]
           }
