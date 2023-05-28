@@ -6,4 +6,5 @@ https://demo.wikidvue.xyz/
 
 # todo
 - [ ] implement add
+- [ ] add move to top level
 - [ ] implement mobile edit and preview
