@@ -11,7 +11,7 @@
 
           <div class="pl-2 pt-1 pr-1 pb-2">
             <div>
-              <DocumentTreeToolbar />
+              <DocumentTreeToolbar @pageAdded="onPageAdded" />
             </div>
           </div>
         </div>
@@ -26,7 +26,7 @@
               <div v-else class="scrollable pl-3">
                 <DocumentViewer :documentData="documentData" :selectedNode="selectedNode" 
                                 @editorSelected="onEditorSelected" @documentDeleted="onDocumentDeleted"
-                                @subPageAdded="onSubPageAdded" />
+                                @subPageAdded="onPageAdded" />
               </div>
             </div>
           </div>
@@ -34,13 +34,14 @@
       </SplitterPanel>
     </Splitter>
 
-    <Dialog v-if="isSmall" v-model:visible="mobileViewerVisible" modal position="right" :dismissableMask="true">
+    <Dialog v-if="isSmall" v-model:visible="mobileViewerVisible" modal position="right" @after-hide="onMobileViewerHidden">
       <template #closeicon>
         <i class="pi pi-chevron-left"></i>
       </template>
-
-      <DocumentViewer :documentData="documentData" :selectedNode="selectedNode" @documentDeleted="onDocumentDeleted"
-                      @subPageAdded="onSubPageAdded" />
+      <DocumentEditor v-if="editorSelected" :documentData="documentData" @saveSelected="onSaveSelected" 
+                      @cancelSelected="onCancelSelected" :isMobile="true" />
+      <DocumentViewer v-else :documentData="documentData" :selectedNode="selectedNode" @documentDeleted="onDocumentDeleted"
+                      @editorSelected="onEditorSelected" @subPageAdded="onPageAdded" />
     </Dialog>
   </div>
 </template>
@@ -96,10 +97,19 @@ export default {
     },
     onDocumentDeleted() {
       this.selectedNode = null
+      if (this.isSmall) {
+        this.mobileViewerVisible = false
+      }
     },
-    onSubPageAdded(page) {
+    onPageAdded(page) {
       this.selectedNode = page
       this.editorSelected = true
+      if (this.isSmall) {
+        this.mobileViewerVisible = true
+      }
+    },
+    onMobileViewerHidden() {
+      this.editorSelected = false
     }
   }
 }

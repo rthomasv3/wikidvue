@@ -124,7 +124,7 @@ body {
 }
 
 @media (max-width: 767px) {
-  .p-dialog {
+  .p-dialog:not(.p-confirm-dialog) {
     height: 100vh !important;
     height: 100% !important;
     left: 0 !important;
@@ -136,7 +136,7 @@ body {
     margin: 0 !important;
   }
 
-  .p-dialog-content {
+  .p-dialog-content:not(.p-confirm-dialog) {
     flex-grow: 1;
   }
 }

@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-column w-full">
+  <div class="flex flex-column w-full h-full">
     <MdEditor :key="key" ref="editor" class="h-full" v-model="text" language="en-US" :theme="theme" 
               :previewTheme="markdownTheme" :codeTheme="codeTheme" :toolbars="toolbars" 
               :footers="footers" :preview="showPreview" autoFocus @onChange="updateWordCount"
@@ -13,10 +13,18 @@
 
   <SpeedDial class="mr-5 mb-4" :model="items" :radius="120" type="quarter-circle" buttonClass="small-dial" 
              direction="up-left" :style="{ right: 0, bottom: 0, zIndex: 10001 }" :transitionDelay="90" />
+
+  <Dialog v-if="isMobile" v-model:visible="mobilePreviewVisible" modal position="right">
+      <template #closeicon>
+        <i class="pi pi-chevron-left"></i>
+      </template>
+      <MdPreview :key="key" :modelValue="text" language="en-US" :theme="theme" :previewTheme="markdownTheme" 
+                 :codeTheme="codeTheme" :showCodeRowNumber="showCodeLineNumbers" :mdHeadingId="mdHeadingId" />
+    </Dialog>
 </template>
 
 <script>
-import { MdEditor } from 'md-editor-v3';
+import { MdEditor, MdPreview } from 'md-editor-v3';
 import removeMd from 'remove-markdown';
 import 'md-editor-v3/lib/style.css';
 import { getHeaderId } from "../services/headerService";
@@ -24,10 +32,12 @@ import { getHeaderId } from "../services/headerService";
 export default {
   name: 'DocumentEditor',
   props: {
-    documentData: ''
+    documentData: '',
+    isMobile: false
   },
   components: {
-    MdEditor
+    MdEditor,
+    MdPreview
   },
   emits: ['save-selected', 'cancel-selected'],
   computed: {
@@ -54,6 +64,11 @@ export default {
         this.key++
       }
     })
+
+    if (this.isMobile) {
+      this.showPreview = false
+      this.$refs.editor.togglePreview(this.showPreview)
+    }
 
     this.updateWordCount()
   },
@@ -92,7 +107,8 @@ export default {
           command: () => { this.$emit('cancel-selected') }
         }
       ],
-      unsubscribe: null
+      unsubscribe: null,
+      mobilePreviewVisible: false
     }
   },
   methods: {
@@ -112,10 +128,19 @@ export default {
       this.$refs.editor.toggleFullscreen(this.fullScreen)
     },
     togglePreview() {
-      this.showPreview = !this.showPreview
-      this.$refs.editor.togglePreview(this.showPreview)
+      var previewVisible = false
 
-      if (this.showPreview) {
+      if (this.isMobile) {
+        this.mobilePreviewVisible = !this.mobilePreviewVisible
+        previewVisible = this.mobilePreviewVisible
+      }
+      else {
+        this.showPreview = !this.showPreview
+        this.$refs.editor.togglePreview(this.showPreview)
+        previewVisible = this.showPreview
+      }
+
+      if (previewVisible) {
         this.items[2].icon = 'pi pi-eye-slash'
       }
       else {

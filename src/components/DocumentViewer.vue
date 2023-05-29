@@ -95,7 +95,9 @@ export default {
                   this.$store.commit('deleteWikiDocument', this.selectedNode.key)
                   this.$emit('document-deleted')
                   this.$toast.add({ severity: 'success', summary: 'Success', detail: 'Deleted ' + this.selectedNode.label, life: 3000 })
-                }
+                  this.$confirm.close()
+                },
+                reject: () => { this.$confirm.close() }
               });
             }
           }

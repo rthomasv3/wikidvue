@@ -33,7 +33,10 @@ export default {
   },
   methods: {
     addClicked() {
-      this.$toast.add({ severity: 'info', summary: 'Info', detail: 'Add Clicked', life: 3000 })
+      var page = { key: -1, label: 'Title', data: '' }
+      this.$store.state.wikiDocuments.push(page)
+      this.$store.state.wikiDocuments.sort((x,y) => { return x.label.localeCompare(y.label) })
+      this.$emit('page-added', page)
     }
   }
 }
