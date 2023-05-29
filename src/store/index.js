@@ -72,12 +72,20 @@ export default createStore({
         var node = moveRequest.node
         var parentNode = moveRequest.parentNode
 
-        if (node !== null && parentNode !== null && node.key !== parentNode.key) {
-          if (parentNode.children === null || parentNode.children === undefined) {
-            parentNode.children = [ ]
-          }
+        if (node !== null) {
           removeNode(state.wikiDocuments, node.key)
-          parentNode.children.push(node)
+
+          if (parentNode !== null && node.key !== parentNode.key) {
+            if (parentNode.children === null || parentNode.children === undefined) {
+              parentNode.children = [ ]
+            }
+            parentNode.children.push(node)
+            parentNode.children.sort((x,y) => { return x.label.localeCompare(y.label) })
+          }
+          else {
+            state.wikiDocuments.push(node)
+            state.wikiDocuments.sort((x,y) => { return x.label.localeCompare(y.label) })
+          }
         }
       }
     },
