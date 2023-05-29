@@ -21,10 +21,12 @@
         <div class="pt-2 pr-2 pl-1 pb-1 flex flex-column align-items-stretch flex-1">
           <div class="flex flex-1 overflow-hidden split-main mb-1">
             <div class="flex flex-1 border-round-sm text-left p-1">
-              <DocumentEditor v-if="editorSelected" :documentData="documentData" @saveSelected="onSaveSelected" @cancelSelected="onCancelSelected" />
+              <DocumentEditor v-if="editorSelected" :documentData="documentData" @saveSelected="onSaveSelected" 
+                              @cancelSelected="onCancelSelected" />
               <div v-else class="scrollable pl-3">
                 <DocumentViewer :documentData="documentData" :selectedNode="selectedNode" 
-                                @editorSelected="onEditorSelected" @documentDeleted="onDocumentDeleted" />
+                                @editorSelected="onEditorSelected" @documentDeleted="onDocumentDeleted"
+                                @subPageAdded="onSubPageAdded" />
               </div>
             </div>
           </div>
@@ -37,7 +39,8 @@
         <i class="pi pi-chevron-left"></i>
       </template>
 
-      <DocumentViewer :documentData="documentData" :selectedNode="selectedNode" />
+      <DocumentViewer :documentData="documentData" :selectedNode="selectedNode" @documentDeleted="onDocumentDeleted"
+                      @subPageAdded="onSubPageAdded" />
     </Dialog>
   </div>
 </template>
@@ -93,6 +96,10 @@ export default {
     },
     onDocumentDeleted() {
       this.selectedNode = null
+    },
+    onSubPageAdded(page) {
+      this.selectedNode = page
+      this.editorSelected = true
     }
   }
 }

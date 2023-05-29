@@ -38,11 +38,7 @@ export default {
   data: function() {
     return {
       selectedParentNode: null,
-      value: 0
     }
-  },
-  mounted() {
-    this.selectedParentNode = this.documentData[0]
   },
   methods: {
     onNodeSelected(node) {

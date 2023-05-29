@@ -56,6 +56,21 @@ export default {
           command: () => { this.$emit('editor-selected') } 
         },
         { 
+          label: 'Add Subpage', 
+          icon: 'pi pi-plus',
+          command: () => {
+            if (this.selectedNode !== null) {
+              if (this.selectedNode.children === null || this.selectedNode.children === undefined) {
+                this.selectedNode.children = [ ]
+              }
+              var subPage = { key: -1, label: 'Title', data: '' }
+              this.selectedNode.children.push(subPage)
+              this.selectedNode.children.sort((x,y) => { return x.label.localeCompare(y.label) })
+              this.$emit('sub-page-added', subPage)
+            }
+          } 
+        },
+        { 
           label: 'Move', 
           icon: 'pi pi-file-export',
           command: () => { this.moveVisible = true } 

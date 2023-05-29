@@ -106,11 +106,17 @@ body {
   text-decoration: none;
   color: var(--text-color);
   background-color: var(--surface-border);
+  height: 2.625rem;
+  width: 2.625rem;
 }
 
 .p-speeddial-action:hover {
   background-color: var(--surface-100);
   color: var(--text-color);
+}
+
+.p-speeddial-action-icon{
+  font-size: 0.875rem;
 }
 
 .p-toast {
