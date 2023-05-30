@@ -176,23 +176,19 @@ export default {
       this.$refs.editor.toggleFullscreen(this.fullScreen)
     },
     togglePreview() {
-      var previewVisible = false
-
       if (this.isMobile) {
         this.mobilePreviewVisible = !this.mobilePreviewVisible
-        previewVisible = this.mobilePreviewVisible
       }
       else {
         this.showPreview = !this.showPreview
         this.$refs.editor.togglePreview(this.showPreview)
-        previewVisible = this.showPreview
-      }
-
-      if (previewVisible) {
-        this.items[2].icon = 'pi pi-eye-slash'
-      }
-      else {
-        this.items[2].icon = 'pi pi-eye'
+        
+        if (this.showPreview) {
+          this.items[2].icon = 'pi pi-eye-slash'
+        }
+        else {
+          this.items[2].icon = 'pi pi-eye'
+        }
       }
     },
     updateWordCount() {

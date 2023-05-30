@@ -17,7 +17,7 @@
         </div>
       </SplitterPanel>
 
-      <SplitterPanel class="hidden md:block lg:block md:flex lg:flex" :size="80" :minSize="20">
+      <SplitterPanel class="hidden md:flex lg:flex split-panel-main" :size="80" :minSize="20">
         <div class="pt-2 pr-2 pl-1 pb-1 flex flex-column align-items-stretch flex-1">
           <div class="flex flex-1 overflow-hidden split-main mb-1">
             <div class="flex flex-1 border-round-sm text-left p-1">
@@ -142,5 +142,9 @@ export default {
   .p-splitter-gutter-handle {
     opacity: 0;
   }
+}
+
+.split-panel-main {
+  min-width: 0;
 }
 </style>

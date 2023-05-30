@@ -212,4 +212,9 @@ h1 {
   white-space: nowrap;
   overflow: hidden;
 }
+
+.md-editor-preview-wrapper pre code {
+  display: inline-grid;
+  width: 100%;
+}
 </style>
