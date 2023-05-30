@@ -26,7 +26,7 @@
               <div v-else class="scrollable pl-3">
                 <DocumentViewer :selectedNode="selectedNode" @editorSelected="onEditorSelected" 
                                 @documentDeleted="onDocumentDeleted" @subPageAdded="onPageAdded"
-                                :isMobile="isSmall" />
+                                :isMobile="isMobile" @closeRequested="onCloseRequested" />
               </div>
             </div>
           </div>
@@ -34,7 +34,7 @@
       </SplitterPanel>
     </Splitter>
 
-    <Dialog v-if="isSmall" v-model:visible="mobileViewerVisible" modal position="right" 
+    <Dialog v-if="isMobile" v-model:visible="mobileViewerVisible" modal position="right" 
             @after-hide="onMobileViewerHidden" :closable="false">
       <template #header>
         <Button icon="pi pi-chevron-left" text rounded plain @click="mobileViewerVisible = false"/>
@@ -42,11 +42,9 @@
           <p class="font-bold document-title">{{ this.selectedNode?.label ?? '' }}</p>
         </div>
       </template>
-      <DocumentEditor v-if="editorSelected" :selectedNode="selectedNode" @saveSelected="onSaveSelected" 
-                      @cancelSelected="onCancelSelected" :isMobile="true" />
-      <DocumentViewer v-else :selectedNode="selectedNode" @documentDeleted="onDocumentDeleted"
+      <DocumentViewer :selectedNode="selectedNode" @documentDeleted="onDocumentDeleted"
                       @editorSelected="onEditorSelected" @subPageAdded="onPageAdded"
-                      :isMobile="isSmall" />
+                      :isMobile="isMobile" @closeRequested="onCloseRequested" />
     </Dialog>
   </div>
 </template>
@@ -60,7 +58,7 @@ import DocumentEditor from '@/components/DocumentEditor.vue'
 export default {
   name: 'SplitLayout',
   props: {
-    isSmall: false
+    isMobile: false
   },
   components: {
     DocumentTree,
@@ -72,7 +70,7 @@ export default {
     return {
       selectedNode: null,
       mobileViewerVisible: false,
-      editorSelected: false
+      editorSelected: false,
     }
   },
   methods: {
@@ -80,7 +78,7 @@ export default {
       this.selectedNode = node
       this.editorSelected = false
 
-      if (this.isSmall) {
+      if (this.isMobile) {
         this.mobileViewerVisible = true
       }
     },
@@ -99,19 +97,25 @@ export default {
     },
     onDocumentDeleted() {
       this.selectedNode = null
-      if (this.isSmall) {
+      if (this.isMobile) {
         this.mobileViewerVisible = false
       }
     },
     onPageAdded(page) {
       this.selectedNode = page
       this.editorSelected = true
-      if (this.isSmall) {
+      if (this.isMobile) {
         this.mobileViewerVisible = true
       }
     },
     onMobileViewerHidden() {
       this.editorSelected = false
+    },
+    onCloseRequested() {
+      this.editorSelected = false
+      if (this.isMobile) {
+        this.mobileViewerVisible = false
+      }
     }
   }
 }

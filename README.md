@@ -10,7 +10,7 @@ https://demo.wikidvue.xyz/
 - [x] add move to top level
 - [x] implement mobile edit and preview
 - [x] fix confirm on mobile
+- [x] gestures
+- [x] back button on mobile editor
 - [ ] inline title edit on mobile
-- [ ] back button on mobile editor
-- [ ] gestures
 - [ ] hotkeys

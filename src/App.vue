@@ -1,6 +1,6 @@
 <template>
   <div>
-    <SplitLayout :isSmall="this.windowWidth < 768" />
+    <SplitLayout :isMobile="isMobile" />
   </div>
 </template>
 
@@ -13,6 +13,11 @@ export default {
   components: {
     FixedLayout,
     SplitLayout
+  },
+  computed: {
+    isMobile() {
+      return this.windowWidth < 768
+    }
   },
   data: function () {
     return {

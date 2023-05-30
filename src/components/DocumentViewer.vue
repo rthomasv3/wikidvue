@@ -1,9 +1,10 @@
 <template>
-  <div class="flex flex-column flex-grow-1 h-full">
+  <div ref="viewer" class="flex flex-column flex-grow-1 h-full">
     <Toast />
 
-    <SpeedDial v-if="selectedNode" class="mr-5 mb-4" :model="items" :radius="120" type="quarter-circle" buttonClass="small-dial"
-               direction="up-left" :style="{ right: 0, bottom: 0 }" :transitionDelay="90" />
+    <SpeedDial v-if="selectedNode && !isPreview" class="mr-5 mb-4" :model="items" :radius="120" type="quarter-circle" 
+               buttonClass="small-dial" direction="up-left" :style="{ right: 0, bottom: 0 }" 
+               :transitionDelay="90" />
 
     <div v-if="selectedNode && !isMobile" class="document-title-parent document-title-parent-padded">
       <h1 class="mb-0 mt-2 document-title">{{ selectedNode.label }}</h1>
@@ -17,11 +18,24 @@
       <p class="text-color-secondary">No Document Selected</p>
     </div>
 
-    <Dialog v-model:visible="moveVisible" modal header="Move Document" :style="{ minWidth: '35vw', maxWidth: isMobile ? '100vw' : '35vw' }" :dismissableMask="true">
+    <Dialog v-model:visible="moveVisible" modal header="Move Document" 
+            :style="{ minWidth: '35vw', maxWidth: isMobile ? '100vw' : '35vw' }" 
+            :dismissableMask="true">
       <Move :selectedNode="selectedNode" @onClosed="moveClosed" />
     </Dialog>
 
     <ConfirmDialog></ConfirmDialog>
+
+    <Dialog v-if="isMobile" v-model:visible="mobileEditorVisible" modal position="right" :closable="false">
+      <template #header>
+        <Button icon="pi pi-chevron-left" text rounded plain @click="mobileEditorVisible = false"/>
+        <div class="w-full ml-2 document-title-parent">
+          <p class="font-bold document-title">{{ this.selectedNode?.label ?? '' }}</p>
+        </div>
+      </template>
+      <DocumentEditor :selectedNode="selectedNode" @saveSelected="onSaveSelected" 
+                      @cancelSelected="onCancelSelected" :isMobile="isMobile" />
+    </Dialog>
   </div>
 </template>
 
@@ -30,16 +44,19 @@ import { MdPreview } from 'md-editor-v3';
 import { getHeaderId } from "../services/headerService";
 import { exportDocument} from '../services/exportService';
 import Move from '@/components/Move.vue'
+import DocumentEditor from '@/components/DocumentEditor.vue'
 
 export default {
   name: 'DocumentViewer',
   props: {
     selectedNode: null,
-    isMobile: false
+    isMobile: false,
+    isPreview: false
   },
   components: {
     MdPreview,
-    Move
+    Move,
+    DocumentEditor
   },
   computed: {
     theme() {
@@ -70,7 +87,14 @@ export default {
         {
           label: 'Edit', 
           icon: 'pi pi-pencil', 
-          command: () => { this.$emit('editor-selected') } 
+          command: () => {
+            if (this.isMobile) {
+              this.mobileEditorVisible = true
+            }
+            else {
+              this.$emit('editor-selected')
+            }
+          } 
         },
         {
           label: 'Add Subpage', 
@@ -121,7 +145,10 @@ export default {
         }
       ],
       unsubscribe: null,
-      moveVisible: false
+      moveVisible: false,
+      touchStartX: 0,
+      touchStartY: 0,
+      mobileEditorVisible: false,
     }
   },
   mounted() {
@@ -131,8 +158,18 @@ export default {
         this.key++
       }
     })
+
+    if (this.isMobile) {
+      this.$refs.viewer.parentElement.addEventListener('touchstart', this.onTouchStart)
+      this.$refs.viewer.parentElement.addEventListener('touchend', this.onTouchEnd);
+    }
   },
-  unmounted() {
+  beforeUnmount() {
+    if (this.isMobile) {
+      this.$refs.viewer.parentElement.removeEventListener('touchstart', this.onTouchStart)
+      this.$refs.viewer.parentElement.removeEventListener('touchend', this.onTouchEnd);
+    }
+
     this.unsubscribe()
   },
   methods: {
@@ -141,6 +178,29 @@ export default {
     },
     moveClosed() {
       this.moveVisible = false
+    },
+    onTouchStart(e) {
+      this.touchStartX = e.changedTouches[0].screenX
+      this.touchStartY = e.changedTouches[0].screenY
+    },
+    onTouchEnd(e) {
+      var touchEndX = e.changedTouches[0].screenX;
+      var touchEndY = e.changedTouches[0].screenY;
+      var isVertical = Math.abs(this.touchStartY - touchEndY) > 150
+
+      if (!isVertical && touchEndX - this.touchStartX > 100) {
+        this.$emit('close-requested')
+      }
+    },
+    onCancelSelected() {
+      this.mobileEditorVisible = false
+    },
+    onSaveSelected(data) {
+      if (this.selectedNode !== null) {
+        this.selectedNode.label = data.title
+        this.selectedNode.data = data.text
+      }
+      this.mobileEditorVisible = false
     }
   }
 }
