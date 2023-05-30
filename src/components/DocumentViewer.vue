@@ -153,7 +153,7 @@ export default {
 }
 
 .document-title-parent-padded {
-  padding-left: 1.24rem;
-  padding-right: 1.6rem;
+  padding-left: 1.24rem !important;
+  padding-right: 1.6rem !important;
 }
 </style>

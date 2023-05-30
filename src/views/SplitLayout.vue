@@ -1,7 +1,7 @@
 <template>
   <div class="full-height">
     <Splitter class="full-height split-parent surface-section">
-      <SplitterPanel class="flex" :size="25" :minSize="15">
+      <SplitterPanel class="flex" :size="20" :minSize="10">
         <div class="flex flex-column align-items-stretch flex-1 gap-2">
           <div class="flex flex-1 pl-2 pt-2 pr-1 overflow-hidden">
             <div class="flex flex-1">
@@ -17,7 +17,7 @@
         </div>
       </SplitterPanel>
 
-      <SplitterPanel class="hidden md:block lg:block md:flex lg:flex" :size="75" :minSize="25">
+      <SplitterPanel class="hidden md:block lg:block md:flex lg:flex" :size="80" :minSize="20">
         <div class="pt-2 pr-2 pl-1 pb-1 flex flex-column align-items-stretch flex-1">
           <div class="flex flex-1 overflow-hidden split-main mb-1">
             <div class="flex flex-1 border-round-sm text-left p-1">
