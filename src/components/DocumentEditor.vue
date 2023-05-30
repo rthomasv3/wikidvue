@@ -33,7 +33,7 @@ import { MdEditor } from 'md-editor-v3'
 import removeMd from 'remove-markdown'
 import 'md-editor-v3/lib/style.css'
 import { getHeaderId } from '../services/headerService'
-import DocumentViewer from '../components/DocumentViewer.vue'
+import DocumentViewer from '@/components/DocumentViewer.vue'
 
 export default {
   name: 'DocumentEditor',

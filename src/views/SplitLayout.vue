@@ -22,7 +22,7 @@
           <div class="flex flex-1 overflow-hidden split-main mb-1">
             <div class="flex flex-1 border-round-sm text-left p-1">
               <DocumentEditor v-if="editorSelected" :selectedNode="selectedNode" @saveSelected="onSaveSelected" 
-                              @cancelSelected="onCancelSelected" />
+                              @cancelSelected="onCancelSelected" :isMobile="isMobile" />
               <div v-else class="scrollable pl-3">
                 <DocumentViewer :selectedNode="selectedNode" @editorSelected="onEditorSelected" 
                                 @documentDeleted="onDocumentDeleted" @subPageAdded="onPageAdded"
