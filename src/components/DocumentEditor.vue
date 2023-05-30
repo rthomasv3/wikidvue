@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import { MdEditor, MdPreview } from 'md-editor-v3'
+import { MdEditor } from 'md-editor-v3'
 import removeMd from 'remove-markdown'
 import 'md-editor-v3/lib/style.css'
 import { getHeaderId } from '../services/headerService'
@@ -43,7 +43,6 @@ export default {
   },
   components: {
     MdEditor,
-    MdPreview,
     DocumentViewer
   },
   emits: ['save-selected', 'cancel-selected'],
