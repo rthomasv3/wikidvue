@@ -2,7 +2,7 @@
   <div ref="viewer" class="flex flex-column flex-grow-1 h-full">
     <Toast />
 
-    <SpeedDial v-if="selectedNode && !isPreview" class="mr-5 mb-4" :model="items" :radius="120" type="quarter-circle" 
+    <SpeedDial v-if="selectedNode" class="mr-5 mb-4" :model="items" :radius="120" type="quarter-circle" 
                buttonClass="small-dial" direction="up-left" :style="{ right: 0, bottom: 0 }" 
                :transitionDelay="90" />
 
@@ -51,7 +51,6 @@ export default {
   props: {
     selectedNode: null,
     isMobile: false,
-    isPreview: false
   },
   components: {
     MdPreview,

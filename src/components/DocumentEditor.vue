@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-column w-full h-full">
+  <div ref="editorParent" class="flex flex-column w-full h-full">
     <InputText class="m-2" type="text" v-model="title" placeholder="Title" />
 
     <MdEditor :key="key" ref="editor" class="h-full" v-model="text" language="en-US" :theme="theme" 
@@ -16,24 +16,24 @@
   <SpeedDial class="mr-5 mb-4" :model="items" :radius="120" type="quarter-circle" buttonClass="small-dial" 
              direction="up-left" :style="{ right: 0, bottom: 0, zIndex: 10001 }" :transitionDelay="90" />
 
-  <Dialog v-if="isMobile" ref="previewDialog" v-model:visible="mobilePreviewVisible" modal position="right" :closable="false">
+  <Dialog v-if="isMobile" v-model:visible="mobilePreviewVisible" modal position="right" :closable="false">
     <template #header>
         <Button icon="pi pi-chevron-left" text rounded plain @click="mobilePreviewVisible = false"/>
         <div class="w-full ml-2">
           <p class="font-bold">{{ title }}</p>
         </div>
       </template>
-      <DocumentViewer :selectedNode="previewNode" :isPreview="true" :isMobile="isMobile" 
-                      @closeRequested="onPreviewCloseRequested"  />
+      <DocumentPreview :selectedNode="previewNode" :isMobile="isMobile" 
+                       @closeRequested="onPreviewCloseRequested"  />
   </Dialog>
 </template>
 
 <script>
+import DocumentPreview from '@/components/DocumentPreview.vue'
 import { MdEditor } from 'md-editor-v3'
 import removeMd from 'remove-markdown'
 import 'md-editor-v3/lib/style.css'
 import { getHeaderId } from '../services/headerService'
-import DocumentViewer from '@/components/DocumentViewer.vue'
 
 export default {
   name: 'DocumentEditor',
@@ -42,8 +42,8 @@ export default {
     isMobile: false
   },
   components: {
+    DocumentPreview,
     MdEditor,
-    DocumentViewer
   },
   emits: ['save-selected', 'cancel-selected'],
   computed: {
@@ -102,14 +102,14 @@ export default {
 
     if (this.isMobile) {
       this.items[2].icon = 'pi pi-eye'
-      this.$refs.editor.$el.parentElement.addEventListener('touchstart', this.onTouchStart)
-      this.$refs.editor.$el.parentElement.addEventListener('touchend', this.onTouchEnd)
+      this.$refs.editorParent.parentElement.addEventListener('touchstart', this.onTouchStart)
+      this.$refs.editorParent.parentElement.addEventListener('touchend', this.onTouchEnd)
     }
   },
   beforeUnmount() {
     if (this.isMobile) {
-      this.$refs.editor.$el.parentElement.removeEventListener('touchstart', this.onTouchStart)
-      this.$refs.editor.$el.parentElement.removeEventListener('touchend', this.onTouchEnd)
+      this.$refs.editorParent.parentElement.removeEventListener('touchstart', this.onTouchStart)
+      this.$refs.editorParent.parentElement.removeEventListener('touchend', this.onTouchEnd)
     }
 
     this.unsubscribe()
