@@ -17,7 +17,7 @@
       <p class="text-color-secondary">No Document Selected</p>
     </div>
 
-    <Dialog v-model:visible="moveVisible" modal header="Move Document" :style="{ minWidth: '35vw' }" :dismissableMask="true">
+    <Dialog v-model:visible="moveVisible" modal header="Move Document" :style="{ minWidth: '35vw', maxWidth: isMobile ? '100vw' : '35vw' }" :dismissableMask="true">
       <Move :selectedNode="selectedNode" @onClosed="moveClosed" />
     </Dialog>
 
