@@ -78,6 +78,6 @@
   {
     "key": 6,
     "label": "test 6",
-    "data": "# Test 6"
+    "data": "```markdown\nWikidVue is a work in progress note taking app with markdown support. The goal of the project is to create a simple and clean app you can host yourself with a mobile first design and PWA. The app will also be available on desktop via electron and work with local `.md` files. A self-hostable sync server is also under development.\n```"
   }
 ]
