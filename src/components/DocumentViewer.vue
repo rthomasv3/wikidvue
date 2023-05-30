@@ -1,12 +1,21 @@
 <template>
-  <div>
+  <div class="flex flex-column flex-grow-1 h-full">
     <Toast />
 
     <SpeedDial v-if="selectedNode" class="mr-5 mb-4" :model="items" :radius="120" type="quarter-circle" buttonClass="small-dial"
                direction="up-left" :style="{ right: 0, bottom: 0 }" :transitionDelay="90" />
 
-    <MdPreview :key="key" :modelValue="documentData" language="en-US" :theme="theme" :previewTheme="markdownTheme" 
-               :codeTheme="codeTheme" :showCodeRowNumber="showCodeLineNumbers" :mdHeadingId="mdHeadingId" />
+    <div v-if="selectedNode && !isMobile" class="document-title-parent document-title-parent-padded">
+      <h1 class="mb-0 mt-2 document-title">{{ selectedNode.label }}</h1>
+      <Divider />
+    </div>
+
+    <MdPreview v-if="selectedNode" :key="key" :modelValue="documentData" language="en-US" :theme="theme" 
+               :previewTheme="markdownTheme" :codeTheme="codeTheme" :showCodeRowNumber="showCodeLineNumbers" 
+               :mdHeadingId="mdHeadingId" />
+    <div v-else class="flex flex-column flex-grow-1 h-full w-full justify-content-center align-items-center">
+      <p class="text-color-secondary">No Document Selected</p>
+    </div>
 
     <Dialog v-model:visible="moveVisible" modal header="Move Document" :style="{ minWidth: '35vw' }" :dismissableMask="true">
       <Move :selectedNode="selectedNode" @onClosed="moveClosed" />
@@ -25,8 +34,8 @@ import Move from '@/components/Move.vue'
 export default {
   name: 'DocumentViewer',
   props: {
-    documentData: null,
-    selectedNode: null
+    selectedNode: null,
+    isMobile: false
   },
   components: {
     MdPreview,
@@ -44,18 +53,26 @@ export default {
     },
     showCodeLineNumbers() {
       return this.$store.state.showCodeLineNumbers
+    },
+    documentData: {
+      get() {
+        return this.selectedNode?.data ?? ''
+      },
+      set(data) {
+        this.selectedNode.data = data
+      }
     }
   },
   data: function () {
     return {
       key: 0,
       items: [ 
-        { 
+        {
           label: 'Edit', 
           icon: 'pi pi-pencil', 
           command: () => { this.$emit('editor-selected') } 
         },
-        { 
+        {
           label: 'Add Subpage', 
           icon: 'pi pi-plus',
           command: () => {
@@ -70,17 +87,17 @@ export default {
             }
           } 
         },
-        { 
+        {
           label: 'Move', 
           icon: 'pi pi-file-export',
           command: () => { this.moveVisible = true } 
         },
-        { 
+        {
           label: 'Download', 
           icon: 'pi pi-download',
           command: () => { exportDocument(this.selectedNode.data, this.selectedNode.label + '.md') } 
         },
-        { 
+        {
           label: 'Delete', 
           icon: 'pi pi-trash',
           command: () => {
@@ -133,5 +150,10 @@ export default {
 .small-dial {
   width: 3.4rem !important;
   height: 3.4rem !important;
+}
+
+.document-title-parent-padded {
+  padding-left: 1.24rem;
+  padding-right: 1.6rem;
 }
 </style>

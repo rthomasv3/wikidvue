@@ -21,12 +21,12 @@
         <div class="pt-2 pr-2 pl-1 pb-1 flex flex-column align-items-stretch flex-1">
           <div class="flex flex-1 overflow-hidden split-main mb-1">
             <div class="flex flex-1 border-round-sm text-left p-1">
-              <DocumentEditor v-if="editorSelected" :documentData="documentData" @saveSelected="onSaveSelected" 
+              <DocumentEditor v-if="editorSelected" :selectedNode="selectedNode" @saveSelected="onSaveSelected" 
                               @cancelSelected="onCancelSelected" />
               <div v-else class="scrollable pl-3">
-                <DocumentViewer :documentData="documentData" :selectedNode="selectedNode" 
-                                @editorSelected="onEditorSelected" @documentDeleted="onDocumentDeleted"
-                                @subPageAdded="onPageAdded" />
+                <DocumentViewer :selectedNode="selectedNode" @editorSelected="onEditorSelected" 
+                                @documentDeleted="onDocumentDeleted" @subPageAdded="onPageAdded"
+                                :isMobile="isSmall" />
               </div>
             </div>
           </div>
@@ -34,14 +34,19 @@
       </SplitterPanel>
     </Splitter>
 
-    <Dialog v-if="isSmall" v-model:visible="mobileViewerVisible" modal position="right" @after-hide="onMobileViewerHidden">
-      <template #closeicon>
-        <i class="pi pi-chevron-left"></i>
+    <Dialog v-if="isSmall" v-model:visible="mobileViewerVisible" modal position="right" 
+            @after-hide="onMobileViewerHidden" :closable="false">
+      <template #header>
+        <Button icon="pi pi-chevron-left" text rounded plain @click="mobileViewerVisible = false"/>
+        <div class="w-full ml-2 document-title-parent">
+          <p class="font-bold document-title">{{ this.selectedNode?.label ?? '' }}</p>
+        </div>
       </template>
-      <DocumentEditor v-if="editorSelected" :documentData="documentData" @saveSelected="onSaveSelected" 
+      <DocumentEditor v-if="editorSelected" :selectedNode="selectedNode" @saveSelected="onSaveSelected" 
                       @cancelSelected="onCancelSelected" :isMobile="true" />
-      <DocumentViewer v-else :documentData="documentData" :selectedNode="selectedNode" @documentDeleted="onDocumentDeleted"
-                      @editorSelected="onEditorSelected" @subPageAdded="onPageAdded" />
+      <DocumentViewer v-else :selectedNode="selectedNode" @documentDeleted="onDocumentDeleted"
+                      @editorSelected="onEditorSelected" @subPageAdded="onPageAdded"
+                      :isMobile="isSmall" />
     </Dialog>
   </div>
 </template>
@@ -63,11 +68,6 @@ export default {
     DocumentViewer,
     DocumentEditor
   },
-  computed: {
-    documentData() {
-      return this.selectedNode === null ? '' : this.selectedNode.data
-    }
-  },
   data: function () {
     return {
       selectedNode: null,
@@ -78,6 +78,7 @@ export default {
   methods: {
     onNodeSelected(node) {
       this.selectedNode = node
+      this.editorSelected = false
 
       if (this.isSmall) {
         this.mobileViewerVisible = true
@@ -88,7 +89,8 @@ export default {
     },
     onSaveSelected(data) {
       if (this.selectedNode !== null) {
-        this.selectedNode.data = data
+        this.selectedNode.label = data.title
+        this.selectedNode.data = data.text
       }
       this.editorSelected = false
     },

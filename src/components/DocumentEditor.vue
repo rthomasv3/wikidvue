@@ -1,5 +1,7 @@
 <template>
   <div class="flex flex-column w-full h-full">
+    <InputText class="m-2" type="text" v-model="title" placeholder="Title" />
+
     <MdEditor :key="key" ref="editor" class="h-full" v-model="text" language="en-US" :theme="theme" 
               :previewTheme="markdownTheme" :codeTheme="codeTheme" :toolbars="toolbars" 
               :footers="footers" :preview="showPreview" autoFocus @onChange="updateWordCount"
@@ -14,9 +16,12 @@
   <SpeedDial class="mr-5 mb-4" :model="items" :radius="120" type="quarter-circle" buttonClass="small-dial" 
              direction="up-left" :style="{ right: 0, bottom: 0, zIndex: 10001 }" :transitionDelay="90" />
 
-  <Dialog v-if="isMobile" v-model:visible="mobilePreviewVisible" modal position="right">
-      <template #closeicon>
-        <i class="pi pi-chevron-left"></i>
+  <Dialog v-if="isMobile" v-model:visible="mobilePreviewVisible" modal position="right" :closable="false">
+    <template #header>
+        <Button icon="pi pi-chevron-left" text rounded plain @click="mobilePreviewVisible = false"/>
+        <div class="w-full ml-2">
+          <p class="font-bold">{{ this.selectedNode?.label ?? '' }}</p>
+        </div>
       </template>
       <MdPreview :key="key" :modelValue="text" language="en-US" :theme="theme" :previewTheme="markdownTheme" 
                  :codeTheme="codeTheme" :showCodeRowNumber="showCodeLineNumbers" :mdHeadingId="mdHeadingId" />
@@ -32,7 +37,7 @@ import { getHeaderId } from "../services/headerService";
 export default {
   name: 'DocumentEditor',
   props: {
-    documentData: '',
+    selectedNode: null,
     isMobile: false
   },
   components: {
@@ -55,6 +60,22 @@ export default {
     },
     tabWidth() {
       return this.$store.state.tabWidth
+    },
+    documentTitle: {
+      get() {
+        return this.selectedNode?.label ?? ''
+      },
+      set(label) {
+        this.selectedNode.label = label
+      }
+    },
+    documentData: {
+      get() {
+        return this.selectedNode?.data ?? ''
+      },
+      set(data) {
+        this.selectedNode.data = data
+      }
     }
   },
   mounted() {
@@ -70,6 +91,9 @@ export default {
       this.$refs.editor.togglePreview(this.showPreview)
     }
 
+    this.title = this.documentTitle
+    this.text = this.documentData
+
     this.updateWordCount()
   },
   unmounted() {
@@ -78,7 +102,8 @@ export default {
   data() {
     return {
       key: 0,
-      text: this.documentData,
+      title: '',
+      text: '',
       pageFullScreen: false,
       fullScreen: false,
       showPreview: true,
@@ -89,7 +114,13 @@ export default {
         {
           label: 'Edit',
           icon: 'pi pi-save',
-          command: () => { this.$emit('save-selected', this.text) }
+          command: () => {
+            var title = (this.title ?? '').trim()
+            if (title.length == 0) {
+              title = 'Title'
+            }
+            this.$emit('save-selected', { title: title, text: this.text })
+          }
         },
         {
           label: 'Toggle Page Full Screen',

@@ -18,6 +18,7 @@ import Toast from 'primevue/toast'
 import Dropdown from 'primevue/dropdown'
 import InputSwitch from 'primevue/inputswitch'
 import InputNumber from 'primevue/inputnumber'
+import InputText from 'primevue/inputtext'
 import ConfirmDialog from 'primevue/confirmdialog'
 import ConfirmationService from 'primevue/confirmationservice'
 import 'primevue/resources/primevue.min.css'
@@ -39,6 +40,7 @@ app.component('Toast', Toast)
 app.component('Dropdown', Dropdown)
 app.component('InputSwitch', InputSwitch)
 app.component('InputNumber', InputNumber)
+app.component('InputText', InputText)
 app.component('ConfirmDialog', ConfirmDialog)
 
 app.use(router)

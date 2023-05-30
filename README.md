@@ -6,9 +6,9 @@ https://demo.wikidvue.xyz/
 
 # todo
 - [x] implement add
-- [ ] title edit
+- [x] title edit
 - [x] add move to top level
 - [x] implement mobile edit and preview
+- [x] fix confirm on mobile
 - [ ] gestures
 - [ ] hotkeys
-- [x] fix confirm on mobile

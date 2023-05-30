@@ -50,6 +50,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+h1 {
+  margin-top: 0rem !important;
+}
+
 .full-height {
   height: 100%;
   height: 100vh;
@@ -84,6 +88,19 @@ body {
 
 .p-tree-toggler:focus {
   box-shadow: none !important;
+}
+
+.p-treenode-content {
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.p-treenode-label {
+  display: table;
+  table-layout: fixed;
+  width: 100%;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 /* .p-treenode-content {
@@ -176,5 +193,18 @@ body {
 .md-editor-footer {
   height: 1.9rem;
   border: none;
+}
+
+.document-title-parent {
+  display: table;
+  table-layout: fixed;
+  width: 100%;
+  padding-right: 1.75rem;
+}
+
+.document-title {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 </style>
