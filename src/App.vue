@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="full-height">
     <SplitLayout :isMobile="isMobile" />
   </div>
 </template>
@@ -53,6 +53,7 @@ body {
 #app {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  height: 100%;
 }
 
 h1 {
@@ -61,9 +62,9 @@ h1 {
 
 .full-height {
   height: 100%;
-  height: 100vh;
+  /* height: 100vh; */
   max-height: 100;
-  max-height: 100vh;
+  /* max-height: 100vh; */
 }
 
 .p-dialog {
@@ -147,7 +148,7 @@ h1 {
 
 @media (max-width: 767px) {
   .p-dialog:not(.p-confirm-dialog) {
-    height: 100vh !important;
+    /* height: 100vh !important; */
     height: 100% !important;
     left: 0 !important;
     max-height: 100% !important;

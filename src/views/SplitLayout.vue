@@ -147,4 +147,9 @@ export default {
 .split-panel-main {
   min-width: 0;
 }
+
+.p-splitter-horizontal > .p-splitter-gutter {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
 </style>
