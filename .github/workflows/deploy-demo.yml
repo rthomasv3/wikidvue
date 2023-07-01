@@ -1,4 +1,4 @@
-name: Deploy web app to Azure Static Web Apps
+name: Deploy Demo to Azure Static Web App
 
 on:
   push:
@@ -24,8 +24,6 @@ jobs:
       - uses: actions/checkout@v3
         with:
           submodules: true
-      - run: npm install
-      - run: npm run build
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
