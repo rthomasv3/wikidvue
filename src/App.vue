@@ -5,13 +5,11 @@
 </template>
 
 <script>
-import FixedLayout from '@/views/FixedLayout.vue'
 import SplitLayout from '@/views/SplitLayout.vue'
 
 export default {
   name: 'App',
   components: {
-    FixedLayout,
     SplitLayout
   },
   computed: {
